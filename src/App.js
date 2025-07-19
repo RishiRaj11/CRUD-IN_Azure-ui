@@ -12,7 +12,7 @@ const App = () => {
   const { instance } = useMsal();
   const isAuthenticated = useIsAuthenticated();
   const login = () => instance.loginRedirect(loginRequest);
-
+console.log("Tested")
   return (
     <Box>
       <Header />
