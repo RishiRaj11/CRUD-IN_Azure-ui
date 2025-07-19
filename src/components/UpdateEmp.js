@@ -3,7 +3,7 @@ import { Box, TextField, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 const UpdateEmp = ({singleEmp}) => {
-    console.log(singleEmp)
+    console.log("Hellow user",singleEmp)
   const [emp, setEmp] = useState({
     name:singleEmp.name,
     email:singleEmp.email,
