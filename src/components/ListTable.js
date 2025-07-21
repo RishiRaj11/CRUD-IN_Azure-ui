@@ -14,17 +14,13 @@ import { Link } from "react-router-dom";
 import { useAuth } from "./context/AuthProvider";
 const ListTable = ({setSingleEmp}) => {
   const [employees,setEmployees]=useState([]);
-  const {accessToken,getToken,user}=useAuth();
+  const {accessToken}=useAuth();
 
   useEffect(()=>{
     const fetchData=async()=>{
-      //const token=await getToken()
-      console.log("token",accessToken)
-      console.log("user",user)
-      const token = await getToken();
       const response = await axios.get("http://localhost:8080/api/allemp", {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
         console.log(response.data)
