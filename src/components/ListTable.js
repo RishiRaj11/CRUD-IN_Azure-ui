@@ -11,12 +11,22 @@ import axios from "axios"
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Link } from "react-router-dom";
+import { useAuth } from "./context/AuthProvider";
 const ListTable = ({setSingleEmp}) => {
   const [employees,setEmployees]=useState([]);
+  const {accessToken,getToken,user}=useAuth();
 
   useEffect(()=>{
     const fetchData=async()=>{
-        const response=await axios.get("https://my-backend-staging-a6e4d7bza5areyb6.canadacentral-01.azurewebsites.net/api/allemp");
+      //const token=await getToken()
+      console.log("token",accessToken)
+      console.log("user",user)
+      const token = await getToken();
+      const response = await axios.get("http://localhost:8080/api/allemp", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
         console.log(response.data)
         setEmployees(response.data)
 
@@ -30,8 +40,8 @@ const ListTable = ({setSingleEmp}) => {
 
   }
   const deleteHandler=async(emp)=>{
-     await axios.delete(`https://my-backend-staging-a6e4d7bza5areyb6.canadacentral-01.azurewebsites.net//api/delete/${emp.empid}`);
-     const response=await axios.get("https://my-backend-staging-a6e4d7bza5areyb6.canadacentral-01.azurewebsites.net/api/allemp");
+     await axios.delete(`http://localhost:8080/api/delete/${emp.empid}`);
+     const response=await axios.get("http://localhost:8080/api/allemp");
      //console.log(response.data)
      setEmployees(response.data)
 

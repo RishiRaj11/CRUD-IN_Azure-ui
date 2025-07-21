@@ -17,7 +17,7 @@ const navigate=useNavigate()
   };
   const submitHandler = async() => {
     console.log(singleEmp.empid)
-    await axios.patch(`https://my-backend-staging-a6e4d7bza5areyb6.canadacentral-01.azurewebsites.net/api/update/${singleEmp.empid}`,emp)
+    await axios.patch(`http://localhost:8080/api/update/${singleEmp.empid}`,emp)
     navigate("/")
     console.log(emp);
     setEmp({ name: "", email: "", designation: "", empid: "" });

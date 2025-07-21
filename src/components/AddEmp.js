@@ -17,7 +17,7 @@ const AddEmp = () => {
   };
   const submitHandler = async() => {
     console.log(emp);
-    await axios.post("https://my-backend-staging-a6e4d7bza5areyb6.canadacentral-01.azurewebsites.net/api/addemp",emp)
+    await axios.post("http://localhost:8080/api/addemp",emp)
     navigate("/")
     setEmp({ name: "", email: "", designation: "", empid: "" });
   };
