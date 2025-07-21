@@ -1,39 +1,78 @@
-name: Deploy React App to Azure Static Web Apps
+# File: .github/workflows/deploy-react-prod.yml
+
+name: CI/CD – React App to Azure (Production)
 
 on:
   push:
     branches:
-      - main
+      - main  # Trigger on main branch push (Production)
 
 jobs:
-  build-and-deploy:
+  build:
+    name: 🔧 Build Phase
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: 📥 Checkout Code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: 🧰 Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      - name: Install dependencies
+      - name: 📦 Install Dependencies
         run: npm ci
 
-      - name: Optional Unit Tests (will not fail build)
-        run: |
-          echo "Running tests (optional)..."
-          npm test || echo "Tests failed but continuing..."
-        continue-on-error: true
-
-      - name: Build React App
+      - name: 🛠️ Build React App
         run: npm run build
 
-      - name: Deploy to Azure Static Web App
+      - name: 📤 Upload Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: react-build
+          path: build
+
+  test:
+    name: ✅ Test Phase (Optional)
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Download Build Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: react-build
+          path: build
+
+      - name: 🧰 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: 🧪 Run Unit Tests (Optional)
+        run: |
+          echo "Running optional unit tests..."
+          npm ci
+          npm test || echo "⚠️ Tests failed, but continuing..."
+        continue-on-error: true
+
+  deploy:
+    name: 🚀 Deploy Phase
+    needs: [build, test]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Download Build Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: react-build
+          path: build
+
+      - name: 🚀 Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           action: "upload"
-          app_location: "/"               # root folder
-          output_location: "build"        # CRA/Vite output folder
+          app_location: "/"               # React root
+          output_location: "build"        # Must match uploaded artifact
