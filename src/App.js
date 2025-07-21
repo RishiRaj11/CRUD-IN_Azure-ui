@@ -14,7 +14,7 @@ const App = () => {
   const [singleEmp, setSingleEmp] = useState({});
   const { instance } = useMsal();
   const isAuthenticated = useIsAuthenticated();
-  const { user, accessToken, getToken } = useAuth();
+  const { user, accessToken} = useAuth();
 
   const login = () => instance.loginRedirect(loginRequest);
 
